@@ -39,30 +39,34 @@ test('listbox component uses shared trigger label truncation', function () {
         ->not->toContain('class="truncate" x-text="current"');
 });
 
-test('portaled listboxes center in the mobile viewport', function () {
+test('listboxes stay in their local Alpine scope by default', function () {
+    $component = file_get_contents(resource_path('views/components/forms/listbox.blade.php'));
     $html = Blade::render('<x-forms.listbox id="region" :options="[]" :wire="false" />');
 
-    expect($html)
-        ->toContain('floatingDropdown(')
+    expect($component)->toContain("'portal' => false")
+        ->and($html)
+        ->toContain('x-data="{')
+        ->toContain('x-ref="panel"')
         ->not->toContain('x-teleport="body"')
-        ->toContain("align: 'left'")
-        ->toContain('matchTriggerWidth: true')
-        ->toContain('x-show="open"')
-        ->toContain('schedulePosition($el)')
-        ->toContain("visibility: positioned ? 'visible' : 'hidden'")
-        ->not->toContain('positionPanel(panel = null)')
-        ->not->toContain('x-show="open && positioned"');
+        ->not->toContain('floatingDropdown(')
+        ->not->toContain('style="position: fixed');
 });
 
-test('legacy floating panels have a centered mobile fallback', function () {
+test('mobile listbox panels stay anchored to their trigger', function () {
     $css = file_get_contents(resource_path('css/app.css'));
 
     expect($css)
-        ->toContain('@media (max-width: 767px)')
-        ->toContain('.listbox-panel:not([style*="position: fixed"])')
-        ->toContain('position: fixed !important;')
-        ->toContain('left: 50% !important;')
-        ->toContain('transform: translate(-50%, -50%) !important;');
+        ->not->toContain('.listbox-panel:not([style*="position: fixed"])')
+        ->not->toContain('transform: translate(-50%, -50%) !important;');
+});
+
+test('portaled listboxes measure content without inheriting the viewport width', function () {
+    $listbox = file_get_contents(resource_path('views/components/forms/listbox.blade.php'));
+
+    expect($listbox)
+        ->toContain("panel.style.width = 'max-content';")
+        ->toContain('panel.style.minWidth = `${triggerRect.width}px`;')
+        ->toContain('Math.max(triggerRect.width, panel.offsetWidth)');
 });
 
 test('searchable listbox component uses shared trigger label truncation', function () {

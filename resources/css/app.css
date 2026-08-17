@@ -373,24 +373,24 @@ tr td:first-child {
     animation: lds-heart 1.2s infinite cubic-bezier(0.215, 0.61, 0.355, 1);
 }
 
-/* Loading feedback uses the Coolify brand accent consistently in dark mode. */
+/* Loading feedback uses the higher-contrast warning accent in dark mode. */
 .dark .animate-spin {
-    color: var(--color-coollabs) !important;
+    color: var(--color-warning) !important;
 }
 
 .dark #nprogress .bar {
-    background: var(--color-coollabs) !important;
+    background: var(--color-warning) !important;
 }
 
 .dark #nprogress .peg {
     box-shadow:
-        0 0 10px var(--color-coollabs),
-        0 0 5px var(--color-coollabs) !important;
+        0 0 10px var(--color-warning),
+        0 0 5px var(--color-warning) !important;
 }
 
 .dark #nprogress .spinner-icon {
-    border-top-color: var(--color-coollabs) !important;
-    border-left-color: var(--color-coollabs) !important;
+    border-top-color: var(--color-warning) !important;
+    border-left-color: var(--color-warning) !important;
 }
 
 html[data-theme="custom"] .loading-indicator,
@@ -1939,27 +1939,7 @@ html[data-theme="custom"] textarea:disabled {
     box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
 }
 
-.floating-dropdown-panel {
-    min-width: 0;
-}
-
-/* Older menus still render inside their page container. On mobile, keep
-   those panels fully visible until they are migrated to the portaled
-   dropdown component. Portaled panels carry their own fixed coordinates. */
 @media (max-width: 767px) {
-    .listbox-panel:not([style*="position: fixed"]) {
-        position: fixed !important;
-        top: 50% !important;
-        right: auto !important;
-        left: 50% !important;
-        width: max-content;
-        max-width: calc(100vw - 1.5rem) !important;
-        max-height: calc(100dvh - 1.5rem) !important;
-        box-sizing: border-box;
-        transform: translate(-50%, -50%) !important;
-        z-index: 9999 !important;
-    }
-
     /* The mobile top bar's backdrop filter makes it the containing block for
        fixed descendants. Keep this menu anchored below its trigger instead
        of centering it within the short top bar. */
@@ -2725,6 +2705,14 @@ input[type="search"]::-webkit-search-results-decoration {
     grid-template-columns: 6.5rem minmax(7rem, 0.8fr) minmax(14rem, 1.5fr) 7rem 5rem 4rem minmax(8rem, 1fr) 5rem;
     gap: 0.75rem;
     min-width: 66rem;
+}
+
+.backup-executions-table-scroll {
+    overflow-x: auto;
+}
+
+.backup-execution-row:last-child > .data-table-row {
+    border-bottom: 0;
 }
 
 .volume-backup-executions-grid {

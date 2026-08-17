@@ -7,27 +7,41 @@ it('renders the shared page size selector', function () {
 
     expect($html)
         ->toContain('aria-label="Items per page"')
+        ->toContain('aria-haspopup="listbox"')
+        ->toContain('role="listbox"')
         ->toContain("\$wire.set('perPage'")
         ->toContain('h-7!')
         ->toContain('w-12!')
-        ->toContain('opacity-0')
         ->toContain('selectedPageSize')
         ->toContain('border-0')
         ->toContain('text-[11px]!')
         ->toContain('mb-0!')
+        ->not->toContain('<select')
         ->toContain("localStorage.getItem('tests.page-size')")
         ->toContain("localStorage.setItem('tests.page-size'")
-        ->toContain('value="10"')
-        ->toContain('value="25"')
-        ->toContain('value="50"')
-        ->toContain('value="100"');
+        ->toContain('applyPageSize(10)')
+        ->toContain('applyPageSize(25)')
+        ->toContain('applyPageSize(50)')
+        ->toContain('applyPageSize(100)')
+        ->not->toContain('>Rows</span>');
     expect($html)
-        ->toContain('value="custom"')
-        ->toContain('data-custom-page-size')
-        ->toContain('customOption?.remove()')
-        ->not->toContain('<option value="" disabled selected>')
+        ->toContain('Custom…')
         ->toContain('min="1"')
         ->toContain('max="100"');
+});
+
+it('positions table dropdown panels outside overflowing containers', function () {
+    $html = Blade::render(<<<'BLADE'
+        <x-table.dropdown>
+            <x-slot:trigger><button type="button">Open</button></x-slot:trigger>
+            <button type="button">Option</button>
+        </x-table.dropdown>
+    BLADE);
+
+    expect($html)
+        ->toContain('position: fixed')
+        ->toContain('getBoundingClientRect()')
+        ->toContain('x-on:scroll.window');
 });
 
 it('renders compact client-side pagination', function () {
