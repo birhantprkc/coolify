@@ -53,6 +53,36 @@ it('hides resource action menus when the user cannot manage the resource', funct
     'server actions' => ['views/livewire/server/navbar.blade.php', 'manageProxy', 'server', 'server'],
 ]);
 
+it('declares deploy authorization on the application stop confirmation', function () {
+    $source = file_get_contents(resource_path('views/livewire/project/application/heading.blade.php'));
+
+    expect($source)->toMatch(
+        '/<x-modal-confirmation\s+canGate="deploy" :canResource="\$application"/'
+    );
+});
+
+it('declares deploy authorization on the service container removal confirmation', function () {
+    $source = file_get_contents(resource_path('views/livewire/project/service/heading.blade.php'));
+
+    expect($source)->toMatch(
+        '/<x-modal-confirmation(?=[^>]*title="Confirm Container Removal\?")(?=[^>]*canGate="deploy")(?=[^>]*:canResource="\$service")[^>]*>/'
+    );
+});
+
+it('declares update authorization on service backup mutation controls', function () {
+    $importBackupView = file_get_contents(resource_path('views/livewire/project/service/import-backup.blade.php'));
+    $volumeBackupView = file_get_contents(resource_path('views/livewire/project/service/volume-backup/index.blade.php'));
+
+    expect($importBackupView)->toMatch(
+        '/<x-forms\.listbox(?=[^>]*id="selectedDatabaseUuid")(?=[^>]*canGate="update")(?=[^>]*:canResource="\$service")[^>]*>/'
+    );
+
+    expect($volumeBackupView)
+        ->toMatch('/<x-modal-input(?=[^>]*:title="\'Edit backup schedule\'")(?=[^>]*canGate="update")(?=[^>]*:canResource="\$service")[^>]*>/')
+        ->toMatch('/<x-forms\.button(?=[^>]*wire:click\.stop="backupNow\(\'database\',[^"]+")(?=[^>]*canGate="update")(?=[^>]*:canResource="\$service")[^>]*>/')
+        ->toMatch('/<x-forms\.button(?=[^>]*wire:click\.stop="backupNow\(\'storage\',[^"]+")(?=[^>]*canGate="update")(?=[^>]*:canResource="\$service")[^>]*>/');
+});
+
 it('keeps mutable Livewire components behind authorization checks', function (string $path, array $requiredNeedles) {
     $source = file_get_contents(base_path($path));
 
