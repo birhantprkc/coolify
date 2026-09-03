@@ -330,7 +330,7 @@ class General extends Component
         $this->syncData();
     }
 
-    public function syncData(bool $toModel = false): void
+    private function syncData(bool $toModel = false): void
     {
         if ($toModel) {
             $this->validate();
@@ -651,6 +651,8 @@ class General extends Component
 
     public function resetDefaultLabels($manualReset = false)
     {
+        $this->authorize('update', $this->application);
+
         try {
             if (! $this->isContainerLabelReadonlyEnabled && ! $manualReset) {
                 return;
